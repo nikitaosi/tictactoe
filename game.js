@@ -47,12 +47,9 @@ class playGame extends Phaser.Scene{
         this.gamestate = true;
         this.board =
             [0,0,0,
-            0,0,0,
-            0,0,0];
-
-
+             0,0,0,
+             0,0,0];
         this.add.image(400, 450, 'background');
-        this.boardArray = [];
         for(var i = 0; i < 9; i++){
                 var newI = i/3;
                 var newJ = i%3;
@@ -65,16 +62,12 @@ class playGame extends Phaser.Scene{
                 tilex.visible = false;
                 tileo.visible = false;
                 var container = this.add.container (tilePosition.x, tilePosition.y, [ image, tilex, tileo ]);
-
                 container.setData("this",this);
                 container.setData("number",i);
-
                 image.on("pointerdown", function () {
 
                     var cont = this.parentContainer;
-                    console.log(cont);
-                    console.log(this);
-                    console.log();
+
                     var game = cont.getData("this");
                     var number = cont.getData("number");
                     if (game.gameState)
@@ -91,39 +84,19 @@ class playGame extends Phaser.Scene{
 
                     }
 
-                    console.log(game.board[0],game.board[1],game.board[2]);
-                    console.log(game.board[3],game.board[4],game.board[5]);
-                    console.log(game.board[6],game.board[7],game.board[8]);
+                    game.printGameBoard();
                 });
-
-
-
-
         }
-        console.log(this.boardArray);
-       // this.addTile();
+       // console.log(this.boardArray);
+
     }
 
 
-
-    addTile(){
-        var emptyTiles = [];
-        for(var i = 0; i < gameOptions.boardSize.rows; i++){
-            for(var j = 0; j < gameOptions.boardSize.cols; j++){
-                if(this.boardArray[i][j].tileValue == 0){
-                    emptyTiles.push({
-                        row: i,
-                        col: j
-                    })
-                }
-            }
-        }
-        if(emptyTiles.length > 0){
-            var chosenTile = Phaser.Utils.Array.GetRandom(emptyTiles);
-            this.boardArray[chosenTile.row][chosenTile.col].tileValue = 1;
-            this.boardArray[chosenTile.row][chosenTile.col].tileSprite.visible = true;
-            this.boardArray[chosenTile.row][chosenTile.col].tileSprite.setFrame(1);
-        }
+    printGameBoard()
+    {
+       console.log(this.board[0],this.board[1],this.board[2]);
+       console.log(this.board[3],this.board[4],this.board[5]);
+       console.log(this.board[6],this.board[7],this.board[8]);
     }
 
     getTilePosition(row, col){
