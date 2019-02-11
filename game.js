@@ -37,46 +37,74 @@ class bootGame extends Phaser.Scene{
 }
 
 class playGame extends Phaser.Scene{
+
+
+
     constructor(){
         super("PlayGame");
     }
     create(){
+        this.gamestate = true;
+        this.board =
+            [0,0,0,
+            0,0,0,
+            0,0,0];
+
+
         this.add.image(400, 450, 'background');
         this.boardArray = [];
-        for(var i = 0; i < gameOptions.boardSize.rows; i++){
-            this.boardArray[i] = [];
-            for(var j = 0; j < gameOptions.boardSize.cols; j++){
-                var tilePosition = this.getTilePosition(i, j);
+        for(var i = 0; i < 9; i++){
+                var newI = i/3;
+                var newJ = i%3;
+
+                var tilePosition = this.getTilePosition(newI, newJ);
                 var image = this.add.image(0, 0, "field").setInteractive();
                 image.setAlpha(0.5);
                 var tilex = this.add.sprite(0, 0, "xo", 0).setInteractive();
-                var tileo = this.add.sprite(0, 0, "xo", 1);
+                var tileo = this.add.sprite(0, 0, "xo", 1).setInteractive();
                 tilex.visible = false;
                 tileo.visible = false;
                 var container = this.add.container (tilePosition.x, tilePosition.y, [ image, tilex, tileo ]);
-                this.input.on("pointerover", function (){
-                    image.setAlpha(1);
-                }, this);
-                this.input.on("pointerout", function (){
-                    image.setAlpha(0.5);
-                }, this);
-                this.input.on("pointerdown", function (){
-                    tilex.visible = true;
-                }, this);
-                this.boardArray[i][j] = {
-                    tileValue: 0,
-                    tileSprite: tilex
-                }
-            }
+
+                container.setData("this",this);
+                container.setData("number",i);
+
+                image.on("pointerdown", function () {
+
+                    var cont = this.parentContainer;
+                    console.log(cont);
+                    console.log(this);
+                    console.log();
+                    var game = cont.getData("this");
+                    var number = cont.getData("number");
+                    if (game.gameState)
+                    {
+                        game.board[number] = -1;
+                        cont.getAt(1).setVisible(true);
+                        game.gameState=!game.gameState;
+                    }
+                    else
+                    {
+                        game.board[number] = 1;
+                        cont.getAt(2).setVisible(true);
+                        game.gameState=!game.gameState;
+
+                    }
+
+                    console.log(game.board[0],game.board[1],game.board[2]);
+                    console.log(game.board[3],game.board[4],game.board[5]);
+                    console.log(game.board[6],game.board[7],game.board[8]);
+                });
+
+
+
+
         }
         console.log(this.boardArray);
-        this.addTile();
+       // this.addTile();
     }
 
-    handleTap(e){
-        console.log("You tapped in: " + e.x.toFixed(2) + ", " + e.y.toFixed(2));
-        e.setTint(0xff0000);
-    }
+
 
     addTile(){
         var emptyTiles = [];
