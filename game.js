@@ -51,8 +51,10 @@ class playGame extends Phaser.Scene{
              0,0,0];
         this.add.image(400, 450, 'background');
         for(var i = 0; i < 9; i++){
-                var newI = i/3;
+                var newI = Math.trunc(i/3);
                 var newJ = i%3;
+
+                console.log(newI,newJ);
 
                 var tilePosition = this.getTilePosition(newI, newJ);
                 var image = this.add.image(0, 0, "field").setInteractive();
