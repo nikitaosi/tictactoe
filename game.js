@@ -42,36 +42,48 @@ class playGame extends Phaser.Scene{
     }
     create(){
         this.add.image(400, 450, 'background');
-        this.boardArray = [];
-            for(var i = 0; j < 9; i++){
-                var newi = i/3;
+        this.board = []; this.emptyboard = [];
+            for(var i = 0; i < 9; i ++){
+                this.board[i] = [];
+                var newi = Math.trunc(i/3);
                 var newj = i%3;
                 var tilePosition = this.getTilePosition(newi, newj);
                 var image = this.add.image(0, 0, "field").setInteractive();
                 image.setAlpha(0.3);
                 var tilex = this.add.sprite(0, 0, "xo", 0).setInteractive();
-                var tileo = this.add.sprite(0, 0, "xo", 1);
+                var tileo = this.add.sprite(0, 0, "xo", 1).setInteractive();
                 tilex.visible = false;
                 tileo.visible = false;
                 var container = this.add.container (tilePosition.x, tilePosition.y, [ image, tilex, tileo ]);
+                this.board[i] = [0, container];
+                container.setData('this', this);
+                container.setData('number', i);
                 image.on("pointerover", function (){
                     this.setAlpha(0.6);
                 });
                 image.on("pointerout", function (){
                     this.setAlpha(0.3);
                 });
+
                 image.on("pointerdown", function (){
                     this.parentContainer.list[1].visible = true;
+                    var game = this.parentContainer.getData('this');
+                    var number = this.parentContainer.getData('number');
+                    game.board[number][0] = 1;
+                    game.emptyboard = [];
+                    var j=0;
+                    for (var i = 0; i <9; i++){
+                        if (game.board[i][0] == 0){
+                            game.emptyboard[j] = i;
+                            j++;
+                        }
+                    }
+                    var chosenTile = Phaser.Utils.Array.GetRandom(game.emptyboard);
+                    console.log(game.emptyboard); console.log(game.board);
+                    for (var i = 0; i <game.board.length; i++){if (i == chosenTile) { game.board[i][0] = -1; game.board[i][1].list[2].visible = true;}}
                 });
-                this.boardArray[i][j] = {
-                    tileValue: 0,
-                    tileSprite: tilex
-                }
             }
         }
-        console.log(this.boardArray);
-    }
-
     getTilePosition(row, col){
         var posX = gameOptions.tileSpacing * (col + 1) + gameOptions.tileSize *
             (col + 0.5);
