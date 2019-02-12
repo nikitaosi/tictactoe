@@ -81,8 +81,10 @@ class playGame extends Phaser.Scene{
                     var chosenTile = Phaser.Utils.Array.GetRandom(game.emptyboard);
                     console.log(game.emptyboard); console.log(game.board);
                     for (var i = 0; i <game.board.length; i++){if (i == chosenTile) { game.board[i][0] = -1; game.board[i][1].list[2].visible = true;}}
+                    game.checkResult();
                 });
             }
+
         }
     getTilePosition(row, col){
         var posX = gameOptions.tileSpacing * (col + 1) + gameOptions.tileSize *
@@ -90,6 +92,16 @@ class playGame extends Phaser.Scene{
         var posY = gameOptions.tileSpacing * (row + 1) + gameOptions.tileSize *
             (row + 0.5);
         return new Phaser.Geom.Point(posX, posY);
+    }
+    checkResult (){
+        var arr = this.board;
+        console.log(arr);
+        for (var i = 0; i<7; i=i+3){
+            var a = arr[i] + arr[i+1] + arr[i+2];
+            if (a==3) { console.log('"X"!'); break;};
+            if (a==-3) {console.log('"O"!'); break;};
+
+        }
     }
 }
 
